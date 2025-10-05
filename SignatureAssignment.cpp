@@ -4,14 +4,14 @@ using namespace std;
 #include <cctype>
 #include <vector>
 
-int CreateArray() {
+int* createArray(int* length) {
 
 }
-void WriteBinary() {
+void writeBinary(int* values, int length) {
 
 }
 
-void ReadBinary() {
+int* readBinary(int& length) {
 
 }
 
