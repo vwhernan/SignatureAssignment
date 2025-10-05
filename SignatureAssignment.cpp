@@ -1,8 +1,8 @@
-// SignatureAssignment.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
+using namespace std;
 #include <iostream>
-
+#include <fstream>
+#include <cctype>
+#include <vector>
 
 int CreateArray() {
 
