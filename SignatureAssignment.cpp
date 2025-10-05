@@ -3,9 +3,25 @@
 
 #include <iostream>
 
+
+int CreateArray() {
+
+}
+void WriteBinary() {
+
+}
+
+void ReadBinary() {
+
+}
+
 int main()
 {
-    std::cout << "Hello World!\n";
+    //Create Array
+
+    //Write Binary and delete array
+
+    //Read Binary and Print
 }
 
 
