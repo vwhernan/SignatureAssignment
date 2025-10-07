@@ -9,8 +9,8 @@ int* createArray(int* length) {
     *length = ARRAY_SIZE;
     int* array = new int[ARRAY_SIZE];
 
-    for (int i = 0; i < 1000; i++) {
-        array[i] = rand() % 1000;
+    for (int i = 0; i < ARRAY_SIZE; i++) {
+        array[i] = rand() % ARRAY_SIZE;
     }
     return array;
 }
@@ -24,32 +24,51 @@ void writeBinary(int* values, int length) {
         return;
     }
 
-    File << "The Length of the Array is: " << length << "\n";
-    for (int i = 0; i < length; i++) {
-        File << values[i] << " ";
-    }
+    File.write(reinterpret_cast<char*>(&length), sizeof(length));
+    File.write(reinterpret_cast<char*>(values), sizeof(int) * length);
+    
     File.close();
 }
 
 int* readBinary(int& length) {
-    return 0;
+    ifstream readFile("binary.dat", ios::binary);
+        if (!readFile) {
+            cerr << "Error: could not open file for reading.\n";
+            return nullptr;
+        }
+        int* arr = new int[length];
+
+        readFile.read(reinterpret_cast<char*>(arr), sizeof(int) * length);
+
+        readFile.close();
+        return arr;       
 }
 
 int main()
 {
     //Declarations
     int length = 0;
-   
+    int newLength = 10;
+
     //Create Array
     int* integerArray = createArray(&length);
  
     //Write Binary 
     writeBinary(integerArray, length);
+    delete[] integerArray;
+    integerArray = nullptr;
+    
     
     //Read Binary and Print
-
+    int* PrintArr = readBinary(newLength);
+    cout << "----------------------------First " << newLength << " Entries----------------------------" << endl;
+    for (int i = 0; i < newLength; i++) {
+        cout << PrintArr[i] << " "; 
+    }
     //Delete Arrays
-    
+    delete[] PrintArr;
+    PrintArr = nullptr;
+
 }
 
 
