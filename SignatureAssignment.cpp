@@ -8,7 +8,9 @@ const int ARRAY_SIZE = 1000;
 int* createArray(int* length) {
     *length = ARRAY_SIZE;
     int* array = new int[ARRAY_SIZE];
-
+    
+    srand(static_cast<unsigned int>(time(NULL))); //Seeds the random
+    
     for (int i = 0; i < ARRAY_SIZE; i++) {
         array[i] = rand() % ARRAY_SIZE;
     }
@@ -69,6 +71,7 @@ int main()
     delete[] PrintArr;
     PrintArr = nullptr;
 
+    return 0;
 }
 
 
