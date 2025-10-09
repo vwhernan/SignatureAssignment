@@ -5,6 +5,37 @@ using namespace std;
 
 const int ARRAY_SIZE = 1000;
 
+class BinaryReader {
+    int* arrInt;
+    int arrSize;
+    int* readValues(int& length) {
+        ifstream readFile("binary.dat", ios::binary);
+        if (!readFile) {
+            cerr << "Error: could not open file for reading.\n";
+            return nullptr;
+        }
+        int* arr = new int[length];
+
+        readFile.read(reinterpret_cast<char*>(arr), sizeof(int) * length);
+
+        readFile.close();
+        return arr;
+        //delete[];
+    }
+
+public:
+    BinaryReader(const char* c) { readValues(); }
+    
+    int* getvalues() {
+        return arrInt;
+    }
+
+    int getSize() {
+        return arrSize;
+    }
+
+};
+
 int* createArray(int* length) {
     *length = ARRAY_SIZE;
     int* array = new int[ARRAY_SIZE];
