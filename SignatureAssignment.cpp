@@ -5,11 +5,12 @@ using namespace std;
 #include <string>
 
 
+const int ARRAY_SIZE = 1000;
 
 class BinaryReader {
-    int* arrInt;
-    int arrSize;
-    const int ARRAY_SIZE = 1000;
+    int* arrInt;  //A pointer to hold integer array from file
+    int arrSize;  
+    
 
     void readValues(const string& filename) {
         ifstream readFile(filename, ios::binary);
@@ -20,16 +21,17 @@ class BinaryReader {
             return;
         }
 
-        readFile.read(reinterpret_cast<char*>(&arrSize), sizeof(arrSize));
-        arrInt = new int[arrSize];
-        readFile.read(reinterpret_cast<char*>(arrInt), sizeof(int) * arrSize);
+        readFile.read(reinterpret_cast<char*>(&arrSize), sizeof(arrSize)); //gets size of the array
+        arrInt = new int[arrSize]; //Dynamically allocates memory for the array
+        readFile.read(reinterpret_cast<char*>(arrInt), sizeof(int) * arrSize); //Reads the actual array of integers into arrInt
     }
 
 public:
     BinaryReader(const string& filename) {
-        readValues(filename);
+        readValues(filename); //immediatly reads data from file
     }
     
+    //Creates an array of 1000 integers (0-999).  Saves it to binary.dat.  Then deallocates the temp array.  USES writeBinary()
     void createBinaryFile(string filename) {       
         int* arr = new int[ARRAY_SIZE];
         srand(static_cast<unsigned int>(time(NULL)));
@@ -39,6 +41,7 @@ public:
         delete[] arr;
     }
 
+    //Opens file, writes size and array to file.   USED IN createBinaryFile() FUNCTION TO WRITE RANDOM INTO FILE
     void writeBinary(int* values, int length, string& path) {
 
         ofstream File(path, ios::binary);
@@ -60,6 +63,17 @@ public:
 
     int getSize() {
         return arrSize;
+    }
+
+    //bonus method for testing
+    void printData() {
+        
+        cout << "---------------------------------------------------------------------- " <<  endl;
+        cout << "The size of the array is " << arrSize << endl;
+        for (int i = 0; i < arrSize; i++) {
+            cout << arrInt[i] << " ";
+        }
+        cout << "\n---------------------------------------------------------------------- " << endl;
     }
 
 };
@@ -115,11 +129,12 @@ int main(){
     BinaryReader test(fileName);
     test.createBinaryFile(fileName);
     
+    //Clear below comment to read array data
+    //test.printData();
+
    Analyzer Analyze(test.getvalues(), test.getSize());
    cout << Analyze.analyze();
 
    Analyze.deleteArr();
    return 0;
 }
-
-
