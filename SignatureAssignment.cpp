@@ -10,26 +10,49 @@ class BinaryReader {
     int* arrInt;
     int arrSize;
     
-    int* readValues(int& length) {
-        ifstream readFile("binary.dat", ios::binary);
+    void readValues(const string& filename) {
+        ifstream readFile(filename, ios::binary);
         if (!readFile) {
             cerr << "Error: could not open file for reading.\n";
-            return nullptr;
+            arrInt = nullptr;
+            arrSize = 0;
+            return;
         }
-        int* arr = new int[length];
 
-        readFile.read(reinterpret_cast<char*>(arr), sizeof(int) * length);
-
-        readFile.close();
-        return arr;
-       
+        readFile.read(reinterpret_cast<char*>(&arrSize), sizeof(arrSize));
+        arrInt = new int[arrSize];
+        readFile.read(reinterpret_cast<char*>(arrInt), sizeof(int) * arrSize);
     }
 
 public:
-    BinaryReader(const char filename) {
-        readValues(arrSize);
+    BinaryReader(const string& filename) {
+        readValues(filename);
     }
     
+    void createBinaryFile(string filename) {
+        const int SIZE = 1000;
+        int* arr = new int[SIZE];
+        srand(static_cast<unsigned int>(time(NULL)));
+        for (int i = 0; i < SIZE; i++) arr[i] = rand() % SIZE;
+
+        writeBinary(arr, SIZE, filename);
+        delete[] arr;
+    }
+
+    void writeBinary(int* values, int length, string& path) {
+
+        ofstream File(path, ios::binary);
+
+        if (!File) {
+            cerr << "Error: Cannot open output file: " << path << "\n";
+            return;
+        }
+
+        File.write(reinterpret_cast<char*>(&length), sizeof(length));
+        File.write(reinterpret_cast<char*>(values), sizeof(int) * length);
+
+        File.close();
+    }
     
     int* getvalues() {
         return arrInt;
@@ -45,104 +68,57 @@ class Analyzer {
     int* arr;
     int size;
 
-    int* cloneValues(int* original) {
-        int* copy = original;
+    int* cloneValues(int* original, int s) {
+        int* copy = new int[s];
+        for (int i = 0; i < s; ++i)
+            copy[i] = original[i];
         return copy;
     }
 
 public:
 
     Analyzer(int* a, int s) : arr(a), size(s) {  
-        cloneValues(arr);
+        cloneValues(arr, size);
     }
-    void deleteArr(int* a) {
-        delete[] a;
-        a = nullptr;
+    void deleteArr() {
+        delete[] arr;
+        arr = nullptr;
     }
 
-    string analyze(int* array, int arraysize) {
+    string analyze() {
         int mean = 0;
-        int min = array[0];
-        int max = array[0];
+        int min = arr[0];
+        int max = arr[0];
 
-        for (int i = 0; i < arraysize; i++) {
-            mean += array[i];
-            if (array[i] < min) {
-                min = array[i];
+        for (int i = 0; i < size; i++) {
+            mean += arr[i];
+            if (arr[i] < min) {
+                min = arr[i];
             }
 
-            if (array[i] > max) {
-                max = array[i];
+            if (arr[i] > max) {
+                max = arr[i];
             }
         }
 
-        mean /= arraysize;
-        string results = "The mean of the array is: " + std::to_string(mean); +"\nThe min is: " + std::to_string(min) + "\nThe max is: " + std::to_string(max);
+        mean /= size;
+        string results = "The mean of the array is: " + to_string(mean) +"\nThe min is: " + to_string(min) + "\nThe max is: " + to_string(max);
         return results;
 
     }
 
 };
 
-//--------------------------------------------------------------------------------------
-int* createArray(int* length) {
-    *length = ARRAY_SIZE;
-    int* array = new int[ARRAY_SIZE];
-    srand(static_cast<unsigned int>(time(NULL))); //Seeds the random
+
+int main(){
+    string fileName = "binary.dat";
+    BinaryReader test(fileName);
+    test.createBinaryFile(fileName);
     
-    for (int i = 0; i < ARRAY_SIZE; i++) {
-        array[i] = rand() % ARRAY_SIZE;
-    }
-    return array;
+   Analyzer Analyze(test.getvalues(), test.getSize());
+   cout << Analyze.analyze();
 
-}
-
-void createBinaryFile() {
-
-}
-
-void writeBinary(int* values, int length) {
-        string binarypath = "binary.dat";
-        ofstream File(binarypath, ios::binary);
-
-        if (!File) {
-            cerr << "Error: Cannot open output file: " << binarypath << "\n";
-            return;
-        }
-
-        File.write(reinterpret_cast<char*>(&length), sizeof(length));
-        File.write(reinterpret_cast<char*>(values), sizeof(int) * length);
-
-        File.close();
-    }
-
-int main()
-{
-
-
-    //Declarations
-    int length = 0;
-    int newLength = 10;
-
-    //Create Array
-    int* integerArray = createArray(&length);
- 
-    //Write Binary 
-    writeBinary(integerArray, length);
-    delete[] integerArray;
-    integerArray = nullptr;
+   Analyze.deleteArr();
     
-    
-    /*Read Binary and Print
-    int* PrintArr = readBinary(newLength);
-    cout << "----------------------------First " << newLength << " Entries----------------------------" << endl;
-    for (int i = 0; i < newLength; i++) {
-        cout << PrintArr[i] << " "; 
-    }
-    //Delete Arrays
-    delete[] PrintArr;
-    PrintArr = nullptr;*/
-
 }
-
 
