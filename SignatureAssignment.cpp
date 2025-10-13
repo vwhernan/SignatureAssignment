@@ -4,12 +4,13 @@ using namespace std;
 #include <random>
 #include <string>
 
-const int ARRAY_SIZE = 1000;
+
 
 class BinaryReader {
     int* arrInt;
     int arrSize;
-    
+    const int ARRAY_SIZE = 1000;
+
     void readValues(const string& filename) {
         ifstream readFile(filename, ios::binary);
         if (!readFile) {
@@ -29,13 +30,12 @@ public:
         readValues(filename);
     }
     
-    void createBinaryFile(string filename) {
-        const int SIZE = 1000;
-        int* arr = new int[SIZE];
+    void createBinaryFile(string filename) {       
+        int* arr = new int[ARRAY_SIZE];
         srand(static_cast<unsigned int>(time(NULL)));
-        for (int i = 0; i < SIZE; i++) arr[i] = rand() % SIZE;
+        for (int i = 0; i < ARRAY_SIZE; i++) arr[i] = rand() % ARRAY_SIZE;
 
-        writeBinary(arr, SIZE, filename);
+        writeBinary(arr, ARRAY_SIZE, filename);
         delete[] arr;
     }
 
@@ -119,6 +119,7 @@ int main(){
    cout << Analyze.analyze();
 
    Analyze.deleteArr();
-    
+   return 0;
 }
+
 
