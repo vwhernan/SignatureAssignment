@@ -136,7 +136,7 @@ class MissingAnalyzer : public Analyzer {
         
         while (testNum < size) {
            
-            test
+            testNum++;
         }
     
     }
