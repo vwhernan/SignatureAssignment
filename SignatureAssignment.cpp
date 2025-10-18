@@ -31,8 +31,12 @@ public:
         readValues(filename); //immediatly reads data from file
     }
     
+    ~BinaryReader() {
+        delete[] arrInt; // Deletes the data read from the file
+        arrInt = nullptr;
+    }
     //Creates an array of 1000 integers (0-999).  Saves it to binary.dat.  Then deallocates the temp array.  USES writeBinary()
-    void createBinaryFile(string filename) {       
+    static void createBinaryFile(string filename) {       
         int* arr = new int[ARRAY_SIZE];
         srand(static_cast<unsigned int>(time(NULL)));
         for (int i = 0; i < ARRAY_SIZE; i++) arr[i] = rand() % ARRAY_SIZE;
@@ -42,7 +46,7 @@ public:
     }
 
     //Opens file, writes size and array to file.   USED IN createBinaryFile() FUNCTION TO WRITE RANDOM INTO FILE
-    void writeBinary(int* values, int length, string& path) {
+    static void writeBinary(int* values, int length, string& path) {
 
         ofstream File(path, ios::binary);
 
@@ -93,12 +97,19 @@ protected: //Accessible by all derived classes
 
 public:
 
-    Analyzer(int* a, int s) : arr(a), size(s) { cloneValues(arr, size); }
-    ~Analyzer() {}
-    void deleteArr() {
+    Analyzer(int* a, int s) : size(s) {
+        // 1. Allocate space for the copy
+        arr = new int[size];
+        // 2. Copy the values
+        for (int i = 0; i < s; ++i)
+            arr[i] = a[i];
+    }
+    
+    ~Analyzer() {
         delete[] arr;
         arr = nullptr;
     }
+   
 
     virtual string  analyze() = 0;
 };
@@ -124,22 +135,25 @@ class DuplicatesAnalyzer :public Analyzer {
                 }
             }
         }
-        return to_string(counter);
+        return "Total Duplicates: " + to_string(counter);
     }
 };
 
 class MissingAnalyzer : public Analyzer {
+public:
     MissingAnalyzer(int* a, int s) : Analyzer(a, s) {}
     string analyze() override {
         
         int testNum= 0;
-        
+        int counter = 0;
         while (testNum < size) {
            
             testNum++;
         }
-    
+
+        return "Total Missing Numbers: " + to_string(counter);
     }
+    
 };
 
 class StatisticsAnalyzer : public Analyzer {
@@ -175,24 +189,27 @@ int main(){
     string fileName = "binary.dat";
 
     //Creates the random intedger array and saves to a binary file
-    BinaryReader File(fileName);
-    File.createBinaryFile(fileName);
+    
+    BinaryReader::createBinaryFile(fileName);
 
+    BinaryReader File(fileName);
     //Creates Analyzer Objects
     DuplicatesAnalyzer DupAnalyzer(File.getvalues(), File.getSize());
     StatisticsAnalyzer StatAnalyzer(File.getvalues(), File.getSize());
+    MissingAnalyzer MissAnalyzer(File.getvalues(), File.getSize());
     
     //Clear below comment to read array data
-    //test.printData();
+    File.printData();
 
     //Gets the min max and mean
-    cout << StatAnalyzer.analyze();
+    cout << StatAnalyzer.analyze() << endl;
 
     //Gets Dublpicates
-    cout << DupAnalyzer.analyze();
+    cout << DupAnalyzer.analyze() << endl;
 
-    //deletes the array from memory
-    DupAnalyzer.deleteArr();
+    //Gets Missing Numbers
+    cout << MissAnalyzer.analyze() << endl;
+
     
     return 0;
 }
