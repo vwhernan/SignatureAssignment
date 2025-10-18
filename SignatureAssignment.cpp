@@ -114,15 +114,29 @@ public:
     virtual string  analyze() = 0;
 };
 
+//--------------------------------CLINT PLEASE FIGURE OUT THE LOGIC TO FIND THE UNIQUE DUPLICATES. THANKS!!!!!!--------------------------------
 class DuplicatesAnalyzer :public Analyzer {
     public:
     DuplicatesAnalyzer(int* a, int s) : Analyzer(a, s) {}
+    
     string analyze() override {
+        int NumberOfDuplicates = 0;
+        
+        
+        return "Total Duplicates: " + to_string(NumberOfDuplicates);
+    }
+};
+
+class MissingAnalyzer : public Analyzer {
+public:
+    MissingAnalyzer(int* a, int s) : Analyzer(a, s) {}
+    string analyze() override {
+        
         int counter = 0;
         int compareNum;
         int NestedNum;
 
-        //Counts all duplicate values. NOT unique values
+
         for (int i = 0; i < size; i++) {
             compareNum = arr[i];
 
@@ -134,21 +148,6 @@ class DuplicatesAnalyzer :public Analyzer {
                     break;
                 }
             }
-        }
-        return "Total Duplicates: " + to_string(counter);
-    }
-};
-
-class MissingAnalyzer : public Analyzer {
-public:
-    MissingAnalyzer(int* a, int s) : Analyzer(a, s) {}
-    string analyze() override {
-        
-        int testNum= 0;
-        int counter = 0;
-        while (testNum < size) {
-           
-            testNum++;
         }
 
         return "Total Missing Numbers: " + to_string(counter);
