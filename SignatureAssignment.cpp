@@ -79,27 +79,74 @@ public:
 };
 
 class Analyzer {
-    int* arr;
-    int size;
-
+private:  //Only accessible by Analyzer
+    //Copys the array and returns a Copys
     int* cloneValues(int* original, int s) {
         int* copy = new int[s];
         for (int i = 0; i < s; ++i)
             copy[i] = original[i];
         return copy;
     }
+protected: //Accessible by all derived classes
+    int* arr;
+    int size;
 
 public:
 
-    Analyzer(int* a, int s) : arr(a), size(s) {  
-        cloneValues(arr, size);
-    }
+    Analyzer(int* a, int s) : arr(a), size(s) { cloneValues(arr, size); }
+    ~Analyzer() {}
     void deleteArr() {
         delete[] arr;
         arr = nullptr;
     }
 
-    string analyze() {
+    virtual string  analyze() = 0;
+};
+
+class DuplicatesAnalyzer :public Analyzer {
+    public:
+    DuplicatesAnalyzer(int* a, int s) : Analyzer(a, s) {}
+    string analyze() override {
+        int counter = 0;
+        int compareNum;
+        int NestedNum;
+
+        //Counts all duplicate values. NOT unique values
+        for (int i = 0; i < size; i++) {
+            compareNum = arr[i];
+
+            for (int j = i + 1; j < size; j++) {
+                NestedNum = arr[j];
+
+                if (compareNum == NestedNum) {
+                    counter++;
+                    break;
+                }
+            }
+        }
+        return to_string(counter);
+    }
+};
+
+class MissingAnalyzer : public Analyzer {
+    MissingAnalyzer(int* a, int s) : Analyzer(a, s) {}
+    string analyze() override {
+        
+        int testNum= 0;
+        
+        while (testNum < size) {
+           
+            test
+        }
+    
+    }
+};
+
+class StatisticsAnalyzer : public Analyzer {
+
+public:
+    StatisticsAnalyzer(int* a, int s) : Analyzer(a, s) {}
+    string analyze() override {
         int mean = 0;
         int min = arr[0];
         int max = arr[0];
@@ -116,25 +163,36 @@ public:
         }
 
         mean /= size;
-        string results = "The mean of the array is: " + to_string(mean) +"\nThe min is: " + to_string(min) + "\nThe max is: " + to_string(max);
+        string results = "The mean of the array is: " + to_string(mean) + "\nThe min is: " + to_string(min) + "\nThe max is: " + to_string(max);
         return results;
 
     }
-
 };
 
 
 int main(){
+    //Set string path
     string fileName = "binary.dat";
-    BinaryReader test(fileName);
-    test.createBinaryFile(fileName);
+
+    //Creates the random intedger array and saves to a binary file
+    BinaryReader File(fileName);
+    File.createBinaryFile(fileName);
+
+    //Creates Analyzer Objects
+    DuplicatesAnalyzer DupAnalyzer(File.getvalues(), File.getSize());
+    StatisticsAnalyzer StatAnalyzer(File.getvalues(), File.getSize());
     
     //Clear below comment to read array data
     //test.printData();
 
-   Analyzer Analyze(test.getvalues(), test.getSize());
-   cout << Analyze.analyze();
+    //Gets the min max and mean
+    cout << StatAnalyzer.analyze();
 
-   Analyze.deleteArr();
-   return 0;
+    //Gets Dublpicates
+    cout << DupAnalyzer.analyze();
+
+    //deletes the array from memory
+    DupAnalyzer.deleteArr();
+    
+    return 0;
 }
