@@ -5,7 +5,7 @@ using namespace std;
 #include <fstream>
 #include <random>
 #include <string>
-
+#include <algorithm>
 
 const int ARRAY_SIZE = 1000;
 
