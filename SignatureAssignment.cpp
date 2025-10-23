@@ -7,6 +7,7 @@ using namespace std;
 #include <string>
 #include <algorithm>
 
+
 const int ARRAY_SIZE = 1000;
 
 class BinaryReader {
@@ -117,7 +118,6 @@ public:
     virtual string  analyze() = 0;
 };
 
-
 class DuplicatesAnalyzer : public Analyzer
 {
 public:
@@ -211,25 +211,57 @@ public:
     }
 };
 
-void selection_sort(int* arr, int size) {
-    // Outer loop iterates through all elements except the last one.
-    for (int i = 0; i < size - 1; ++i) {
-        int min_idx = i;
+class SearchAnalyzer : public Analyzer {
+public:
+    SearchAnalyzer(int* arr, int size) : Analyzer(arr, size) {}
 
-        // Inner loop finds the minimum element in the *unsorted* portion
-        for (int j = i + 1; j < size; ++j) {
-            // Check if the current element arr[j] is smaller than the current minimum
-            if (arr[j] < arr[min_idx]) {
-                min_idx = j;
+    string analyze() override {
+      
+        string results = "hello";
+        return results;
+
+    }
+
+    bool binary_search_recursive(int* arr, int key, int start, int end) {
+        if (end < start) {
+            return false;
+        }
+        int mid = (start + end) / 2;
+
+        if (arr[mid] == key) {
+            return true;
+        }
+        if (arr[mid] < key)
+            return binary_search_recursive(arr, key, mid + 1, end);
+        else
+            return binary_search_recursive(arr, key, start, mid - 1);
+    }
+    
+    bool binary_search(int* arr, int key, int size) {
+        return binary_search_recursive(arr, key, 0, size);
+    }
+
+    void selection_sort(int* arr, int size) {
+        // Outer loop iterates through all elements except the last one.
+        for (int i = 0; i < size - 1; ++i) {
+            int currentMin = i;
+
+            // Inner loop finds the minimum element in the *unsorted* portion
+            for (int j = i + 1; j < size; ++j) {
+                // Check if the current element arr[j] is smaller than the current minimum
+                if (arr[j] < arr[currentMin]) {
+                    currentMin = j;
+                }
+            }
+
+            // If the minimum element found is not the one we started with, swap them.
+            if (currentMin != i) {
+                std::swap(arr[i], arr[currentMin]);
             }
         }
-
-        // If the minimum element found is not the one we started with, swap them.
-        if (min_idx != i) {
-            std::swap(arr[i], arr[min_idx]);
-        }
     }
-}
+};
+
 
 int main() {
     //Set string path
@@ -244,12 +276,14 @@ int main() {
     DuplicatesAnalyzer DupAnalyzer(File.getvalues(), File.getSize());
     StatisticsAnalyzer StatAnalyzer(File.getvalues(), File.getSize());
     MissingAnalyzer MissAnalyzer(File.getvalues(), File.getSize());
+    SearchAnalyzer SearchA(File.getvalues(), File.getSize());
+
 
     //Clear below comment to read array data
     
     cout << "Before Sort" << endl;
     File.printData();
-    selection_sort(File.getvalues(), File.getSize());
+    SearchA.selection_sort(File.getvalues(), File.getSize());
     
     cout << "After Sort" << endl;
     File.printData();
@@ -257,11 +291,16 @@ int main() {
     //Gets the min max and mean
     cout << StatAnalyzer.analyze() << endl;
 
+    //Get Median, Mode
+    
+    
     //Gets Dublpicates
     cout << DupAnalyzer.analyze() << endl;
 
     //Gets Missing Numbers
     cout << MissAnalyzer.analyze() << endl;
+
+    //Get total random values
 
 
     return 0;
