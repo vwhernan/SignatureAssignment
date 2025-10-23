@@ -279,10 +279,10 @@ int main() {
 
     BinaryReader File(fileName);
     //Creates Analyzer Objects
-    DuplicatesAnalyzer DupAnalyzer(File.getvalues(), File.getSize());
-    StatisticsAnalyzer StatAnalyzer(File.getvalues(), File.getSize());
-    MissingAnalyzer MissAnalyzer(File.getvalues(), File.getSize());
     SearchAnalyzer SearchA(File.getvalues(), File.getSize());
+    DuplicatesAnalyzer DupAnalyzer(File.getvalues(), File.getSize());
+    MissingAnalyzer MissAnalyzer(File.getvalues(), File.getSize());
+    StatisticsAnalyzer StatAnalyzer(File.getvalues(), File.getSize());
 
 
     //Clear below comment to read array data
