@@ -185,18 +185,23 @@ public:
         SearchAnalyzer::selection_sort(arr, size);
     }
     string analyze() override {
+        int min = 0;
+        int max = 0;
+        int median = 0;
         double sum = 0;
+        //Gets Sum of all values
         for (int i = 0; i < size; ++i) {
             sum += arr[i];
         }
         
-        int min = 0;
-        int max = 0;
-        double mean = static_cast<double>(sum) / size;
+        //gets min, max, mean
+        double mean = sum / size;
         min = arr[0];
         max = arr[size - 1]; 
+        median = arr[size/2];
+        //ADD LOGIC FOR MODE
     
-        string results = "The mean of the array is: " + to_string(mean) + "\nThe min is: " + to_string(min) + "\nThe max is: " + to_string(max);
+        string results = "The mean of the array is: " + to_string(mean) + "\nThe min is: " + to_string(min) + "\nThe max is: " + to_string(max) + "\nThe median is: " + to_string(median);
         return results;
 
     }
