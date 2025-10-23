@@ -74,12 +74,13 @@ public:
     //bonus method for testing
     void printData() {
 
-        cout << "---------------------------------------------------------------------- " << endl;
         cout << "The size of the array is " << arrSize << endl;
+        cout << "------------------------------------------------------------------------- " << endl;
         for (int i = 0; i < arrSize; i++) {
             cout << arrInt[i] << " ";
         }
         cout << "\n---------------------------------------------------------------------- " << endl;
+        
     }
 
 };
@@ -210,6 +211,25 @@ public:
     }
 };
 
+void selection_sort(int* arr, int size) {
+    // Outer loop iterates through all elements except the last one.
+    for (int i = 0; i < size - 1; ++i) {
+        int min_idx = i;
+
+        // Inner loop finds the minimum element in the *unsorted* portion
+        for (int j = i + 1; j < size; ++j) {
+            // Check if the current element arr[j] is smaller than the current minimum
+            if (arr[j] < arr[min_idx]) {
+                min_idx = j;
+            }
+        }
+
+        // If the minimum element found is not the one we started with, swap them.
+        if (min_idx != i) {
+            std::swap(arr[i], arr[min_idx]);
+        }
+    }
+}
 
 int main() {
     //Set string path
@@ -226,6 +246,12 @@ int main() {
     MissingAnalyzer MissAnalyzer(File.getvalues(), File.getSize());
 
     //Clear below comment to read array data
+    
+    cout << "Before Sort" << endl;
+    File.printData();
+    selection_sort(File.getvalues(), File.getSize());
+    
+    cout << "After Sort" << endl;
     File.printData();
 
     //Gets the min max and mean
