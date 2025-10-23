@@ -1,4 +1,4 @@
-//Vincent Hernandez, CLint Woods, Jeremy Sherman
+//Vincent Hernandez, Clint Woods, Jeremy Sherman
 
 using namespace std;
 #include <iostream>
@@ -118,6 +118,90 @@ public:
     virtual string  analyze() = 0;
 };
 
+class SearchAnalyzer : public Analyzer {
+public:
+
+    SearchAnalyzer(int* arr, int size) : Analyzer(arr, size) {
+        selection_sort(arr, size);
+    }
+
+    string analyze() override {
+        int random[100];
+        int count = 0;
+        
+        for (int i = 0; i < 100; i++) random[i] = rand() % 1000;
+
+        for (int i = 0; i < 100; i++) {
+            if (binary_search(arr, random[i], size)) { count++; }
+        }
+        string results = "There were " + to_string(count) + " out of 100 random values found";
+        return results;
+    }
+
+    bool binary_search_recursive(int* arr, int key, int start, int end) {
+        if (end < start) {
+            return false;
+        }
+        int mid = (start + end) / 2;
+
+        if (arr[mid] == key) {
+            return true;
+        }
+        if (arr[mid] < key)
+            return binary_search_recursive(arr, key, mid + 1, end);
+        else
+            return binary_search_recursive(arr, key, start, mid - 1);
+    }
+
+    bool binary_search(int* arr, int key, int size) {
+        return binary_search_recursive(arr, key, 0, size);
+    }
+
+    static void selection_sort(int* arr, int size) {
+        // Outer loop iterates through all elements except the last one.
+        for (int i = 0; i < size - 1; ++i) {
+            int currentMin = i;
+
+            // Inner loop finds the minimum element in the *unsorted* portion
+            for (int j = i + 1; j < size; ++j) {
+                // Check if the current element arr[j] is smaller than the current minimum
+                if (arr[j] < arr[currentMin]) {
+                    currentMin = j;
+                }
+            }
+
+            // If the minimum element found is not the one we started with, swap them.
+            if (currentMin != i) {
+                std::swap(arr[i], arr[currentMin]);
+            }
+        }
+    }
+};
+
+class StatisticsAnalyzer : public Analyzer {
+
+public:
+    StatisticsAnalyzer(int* arr, int size) : Analyzer(arr, size) {
+        SearchAnalyzer::selection_sort(arr, size);
+    }
+    string analyze() override {
+        double sum = 0;
+        for (int i = 0; i < size; ++i) {
+            sum += arr[i];
+        }
+        
+        int min = 0;
+        int max = 0;
+        double mean = static_cast<double>(sum) / size;
+        min = arr[0];
+        max = arr[size - 1]; 
+    
+        string results = "The mean of the array is: " + to_string(mean) + "\nThe min is: " + to_string(min) + "\nThe max is: " + to_string(max);
+        return results;
+
+    }
+};
+
 class DuplicatesAnalyzer : public Analyzer
 {
 public:
@@ -182,94 +266,6 @@ public:
         return "Total Missing Numbers: " + to_string(counter);
     }
 
-};
-
-class StatisticsAnalyzer : public Analyzer {
-
-public:
-    StatisticsAnalyzer(int* a, int s) : Analyzer(a, s) {}
-    string analyze() override {
-        int mean = 0;
-        int min = arr[0];
-        int max = arr[0];
-
-        for (int i = 0; i < size; i++) {
-            mean += arr[i];
-            if (arr[i] < min) {
-                min = arr[i];
-            }
-
-            if (arr[i] > max) {
-                max = arr[i];
-            }
-        }
-
-        mean /= size;
-        string results = "The mean of the array is: " + to_string(mean) + "\nThe min is: " + to_string(min) + "\nThe max is: " + to_string(max);
-        return results;
-
-    }
-};
-
-class SearchAnalyzer : public Analyzer {
-public:
-    SearchAnalyzer(int* arr, int size) : Analyzer(arr, size) {
-        selection_sort(arr, size);
-    }
-
-    string analyze() override {
-        int random[100];
-        int count = 0;
-        srand(static_cast<unsigned int>(time(NULL)));
-        for (int i = 0; i < 100; i++) random[i] = rand() % 1000;
-
-        for (int i = 0; i < 100; i++) {
-            if (binary_search_recursive(arr, random[i], 0, ARRAY_SIZE)) {count++; }
-
-        }
-        string results = "There were " + to_string(count) + " out of 100 random values found";
-        return results;
-
-    }
-
-    bool binary_search_recursive(int* arr, int key, int start, int end) {
-        if (end < start) {
-            return false;
-        }
-        int mid = (start + end) / 2;
-
-        if (arr[mid] == key) {
-            return true;
-        }
-        if (arr[mid] < key)
-            return binary_search_recursive(arr, key, mid + 1, end);
-        else
-            return binary_search_recursive(arr, key, start, mid - 1);
-    }
-    
-    bool binary_search(int* arr, int key, int size) {
-        return binary_search_recursive(arr, key, 0, size);
-    }
-
-    void selection_sort(int* arr, int size) {
-        // Outer loop iterates through all elements except the last one.
-        for (int i = 0; i < size - 1; ++i) {
-            int currentMin = i;
-
-            // Inner loop finds the minimum element in the *unsorted* portion
-            for (int j = i + 1; j < size; ++j) {
-                // Check if the current element arr[j] is smaller than the current minimum
-                if (arr[j] < arr[currentMin]) {
-                    currentMin = j;
-                }
-            }
-
-            // If the minimum element found is not the one we started with, swap them.
-            if (currentMin != i) {
-                std::swap(arr[i], arr[currentMin]);
-            }
-        }
-    }
 };
 
 
