@@ -213,11 +213,21 @@ public:
 
 class SearchAnalyzer : public Analyzer {
 public:
-    SearchAnalyzer(int* arr, int size) : Analyzer(arr, size) {}
+    SearchAnalyzer(int* arr, int size) : Analyzer(arr, size) {
+        selection_sort(arr, size);
+    }
 
     string analyze() override {
-      
-        string results = "hello";
+        int random[100];
+        int count = 0;
+        srand(static_cast<unsigned int>(time(NULL)));
+        for (int i = 0; i < 100; i++) random[i] = rand() % 1000;
+
+        for (int i = 0; i < 100; i++) {
+            if (binary_search_recursive(arr, random[i], 0, ARRAY_SIZE)) {count++; }
+
+        }
+        string results = "There were " + to_string(count) + " out of 100 random values found";
         return results;
 
     }
@@ -301,7 +311,7 @@ int main() {
     cout << MissAnalyzer.analyze() << endl;
 
     //Get total random values
-
+    cout << SearchA.analyze() << endl;
 
     return 0;
 }
