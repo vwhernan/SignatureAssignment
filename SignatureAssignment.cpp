@@ -285,8 +285,7 @@ int main() {
     StatisticsAnalyzer StatAnalyzer(File.getvalues(), File.getSize());
 
 
-    //Clear below comment to read array data
-    
+    //Prints Arrays before and after sort
     cout << "Before Sort" << endl;
     File.printData();
     SearchA.selection_sort(File.getvalues(), File.getSize());
