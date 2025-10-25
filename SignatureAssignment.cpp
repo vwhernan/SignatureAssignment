@@ -121,8 +121,8 @@ public:
 class SearchAnalyzer : public Analyzer {
 public:
 
-    SearchAnalyzer(int* arr, int size) : Analyzer(arr, size) {
-        selection_sort(arr, size);
+    SearchAnalyzer(int* a, int s) : Analyzer(a, s) {
+        selection_sort(this->arr, this->size);
     }
 
     string analyze() override {
@@ -133,9 +133,8 @@ public:
 
         for (int i = 0; i < 100; i++) {
             if (binary_search(arr, random[i], size)) { count++; }
-            cout << random[i] << " ";
         }
-        string results = "\nThere were " + to_string(count) + " out of 100 random values found";
+        string results = "There were " + to_string(count) + " out of 100 random values found";
         return results;
     }
 
@@ -316,10 +315,11 @@ int main() {
 
     BinaryReader File(fileName);
     //Creates Analyzer Objects
+    SearchAnalyzer SearchA(File.getvalues(), File.getSize());
     DuplicatesAnalyzer DupAnalyzer(File.getvalues(), File.getSize());
     MissingAnalyzer MissAnalyzer(File.getvalues(), File.getSize());
     StatisticsAnalyzer StatAnalyzer(File.getvalues(), File.getSize());
-    SearchAnalyzer SearchA(File.getvalues(), File.getSize());
+    
 
     //Prints Arrays before and after sort
     SearchA.selection_sort(File.getvalues(), File.getSize());
