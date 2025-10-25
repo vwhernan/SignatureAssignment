@@ -74,7 +74,7 @@ public:
 
     //bonus method for testing
     void printData() {
-
+        cout << "The Rest of the data is below the array" << endl;
         cout << "The size of the array is " << arrSize << endl;
         cout << "------------------------------------------------------------------------- " << endl;
         for (int i = 0; i < arrSize; i++) {
@@ -133,8 +133,9 @@ public:
 
         for (int i = 0; i < 100; i++) {
             if (binary_search(arr, random[i], size)) { count++; }
+            cout << random[i] << " ";
         }
-        string results = "There were " + to_string(count) + " out of 100 random values found";
+        string results = "\nThere were " + to_string(count) + " out of 100 random values found";
         return results;
     }
 
@@ -154,7 +155,7 @@ public:
     }
 
     bool binary_search(int* arr, int key, int size) {
-        return binary_search_recursive(arr, key, 0, size);
+        return binary_search_recursive(arr, key, 0, size-1);
     }
 
     static void selection_sort(int* arr, int size) {
